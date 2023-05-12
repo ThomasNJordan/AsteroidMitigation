@@ -33,6 +33,8 @@ Version 8.9 - Added Lagrange Point and Asteroid
 ## Credits
  
 Lead Developer - Thomas Jordan
+
+
 Contributors:
 - Chaz Gillette (@cgillette25)
 - Anna Harner (@annaharner)

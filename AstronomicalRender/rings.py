@@ -17,8 +17,6 @@ class PlanetRing:
             self.mass = mass
             self.planet_scale = planet_scale
             self.color = color
-
-
             # Rings are at most, 1 km thick
 
             # Create Saturn's rings using extrusion

@@ -2,7 +2,7 @@
 main.py - main function for the frontend 3D enviroment
 Name: Thomas Jordan
 Last Modified: April 19, 2023
-Version: 8.9
+Version: 7.9
 References:
     * https://iopscience.iop.org/article/10.1088/0004-637X/750/2/135/pdf
     * https://www.glowscript.org/#/user/GlowScriptDemos/folder/Examples/program/Stars-VPython
@@ -30,7 +30,7 @@ try:
     from satellite import Satellite
     from moon import Moon
     from asteroid import Asteroid
-    from lagrange import Lagrange
+    "from lagrange import Lagrange"
 
 except ImportError as error:
     print("Error during loading module. {}".format(error))
@@ -77,6 +77,7 @@ def trail_flag_button(b):
 # ============== MAIN ==============
 
 if __name__ == '__main__':
+    #PLANET_SCALE = 0.0001  # 0.0001
     PLANET_SCALE = 0.00002
     DISTANCE_SCALE = 0.0000002  # 0.0000002
     SUN_SCALE = 0.1 * PLANET_SCALE  # 0.1
@@ -88,11 +89,27 @@ if __name__ == '__main__':
     trail_flag = False
 
     # SCENE:
+    #scene.visible = False # Show nothing until all assets are loaded
+
     scene = canvas(width=1200, height=700)
     scene.title = int(0.1 * scene.width) * ' ' + 'Asteroid Mitigation using Lasers\n',
     scene.ambient = color.gray(0.7)
     scene.autoscale = False
     scene.lights = []
+
+    # Using deep space image: https://svs.gsfc.nasa.gov/4851
+    # Converted to cubemap using: https://jaxry.github.io/panorama-to-cubemap/
+    # Define the six images of the space cubemap
+    '''
+    textures = {
+        "posx": "px.png",
+        "negx": "nx.png",
+        "posy": "py.png",
+        "negy": "ny.png",
+        "posz": "pz.png",
+        "negz": "nz.png"
+    }
+    '''
 
     #scene.background = 'Cubemap/px.png'
 
@@ -146,8 +163,6 @@ if __name__ == '__main__':
                     DISTANCE_SCALE,
                     time_scale,
                     REFRESH_RATE)
-    
-    #TODO: Clean up asteroid code
     asteroid = Asteroid(1275,
                     179600000,
                     999999,
@@ -161,16 +176,18 @@ if __name__ == '__main__':
                     time_scale,
                     REFRESH_RATE)
 
-    lagrange = Lagrange(500, # Diameter
-                    151500000, # Distance to sun
-                    365.25, # Revolution time
-                    0, # inclination angle 
-                    sun,
-                    PLANET_SCALE,
-                    DISTANCE_SCALE,
-                    time_scale,
-                    REFRESH_RATE,
-                    color = color.red)
+    lagrange = Planet(500,
+                        151500000,
+                        9999999999999999,
+                        365.25,
+                        'new_textures/Yellow.jpg',
+                        0,
+                        0.0,
+                        sun,
+                        PLANET_SCALE,
+                        DISTANCE_SCALE,
+                        time_scale,
+                        REFRESH_RATE)
 
     # https://www.nasa.gov/sites/default/files/files/Distance_to_the_Moon.pdf
     moon = Moon(3475,
@@ -182,7 +199,6 @@ if __name__ == '__main__':
                 5.1,
                 earth)
 
-    #TODO: Fix Satellite code
     satellite = Satellite(100,
                      500000,
                      9999999,
@@ -228,6 +244,16 @@ if __name__ == '__main__':
                     DISTANCE_SCALE,
                     time_scale,
                     REFRESH_RATE)
+    """lagrange = Lagrange(2000,
+                        151100000,
+                        365.25,
+                        'new_textures/sun.jpg',
+                        5.97 * 10**24, 0.0,
+                        sun,
+                        PLANET_SCALE,
+                        DISTANCE_SCALE,
+                        time_scale,
+                        REFRESH_RATE)"""
     # https://nssdc.gsfc.nasa.gov/planetary/factsheet/satringfact.html
     # https://www.science.org/doi/10.1126/science.aat2965
     # https://spacemath.gsfc.nasa.gov/weekly/10Page28.pdf
@@ -280,11 +306,14 @@ if __name__ == '__main__':
                     'neptune': neptune,
                     'asteroid': asteroid
                     }
-    
-    # Laser Code
+#LASER CODE
     v1 = (-151500000 * DISTANCE_SCALE, 0, 0)
     v2 = (-179600000 * DISTANCE_SCALE, 0, 0)
-    c = curve(pos=[v1,v2], color=color.green, radius=0.0003)
+    c = curve(pos=[v1,v2], color=color.red, radius=0.0003) #lagrange' : lagrange"""
+
+    # Show scene now that assets are loaded
+    #scene.waitfor('textures')
+    #scene.visible = True
 
     button(text='<b>START</b>', pos=scene.title_anchor, bind=start_flag_button)
     scene.caption = ''
@@ -299,14 +328,14 @@ if __name__ == '__main__':
     # MAIN LOOP:
     while True:
         rate(REFRESH_RATE)
+        #curve(pos=[lagrange.postion, asteroid.position], radius=0.05)
         for obj in list(solar_system.values()):
             if type(obj) != PlanetRing:
                 obj.update(time_scale)
             if start_flag:
-                if (type(obj) != PlanetRing):
-                    if (type(obj) != Lagrange):
-                        obj.rotate_axis()
-                if type(obj) == Planet or type(obj) == Lagrange:
+                if type(obj) != PlanetRing:
+                    obj.rotate_axis()
+                if type(obj) == Planet:
                     if trail_flag:
                         obj.trail(0)
                     else:

@@ -9,23 +9,23 @@ from vpython import sphere, vector, pi
 from math import sin, cos, sqrt, atan2
 
 class Lagrange:
-    def __init__(self, diameter, distance_to_sun, orbital_period_in_days, texture,
-                 inclination_angle, star, planet_scale, distance_scale, time_scale, refresh_rate):
+    def __init__(self, diameter, distance_to_sun, orbital_period_in_days, inclination_angle, 
+                 star, planet_scale, distance_scale, time_scale, refresh_rate, color):
         try:
             # Set attributes to object
             self.radius = diameter / 2.0
             self.distance_to_sun = distance_to_sun
-            self.rotation_speed = 2.0 * pi / (rotation_period_in_hours * 3600)  # [rad/sec]
             self.orbit_speed = 2.0 * pi / (orbital_period_in_days * 3600 * 24)
-            self.texture = texture
             self.star = star
             self.planet_scale = planet_scale
             self.distance_scale = distance_scale
             self.time_scale = time_scale
             self.refresh_rate = refresh_rate
             self.inclination_angle = inclination_angle
+            self.color = color
             self.obj = sphere(radius=self.radius * self.planet_scale,
-                              pos=vector(-self.distance_to_sun * self.distance_scale, 0, 0), texture=self.texture,
+                              pos=vector(-self.distance_to_sun * self.distance_scale, 0, 0),
+                              color = self.color,
                               make_trail=False)
             self.sum_ang = 0
         except TypeError:
@@ -37,7 +37,6 @@ class Lagrange:
         """This method is used to update time_scale which can be changed from outside this class"""
         self.time_scale = time_scale
         self.obj.interval = 1 / (self.orbit_speed * self.time_scale)
-
 
     def rotate_orbit(self):
         """Method that orbits planet around a star"""
@@ -81,9 +80,11 @@ class Lagrange:
             print("ERROR: wrong arguments type while initializing!!")
 
 
-    """def trail(self, trail_radius=0):
+    def trail(self, trail_radius=0):
+        """
         This method draws trail behind a planet (if you don't give any value to trail_radius, trail will resize
         when zooming in or out)
+        """
         try:
             if self.sum_ang > 2 * pi:
                 self.obj.make_trail = False
@@ -92,7 +93,7 @@ class Lagrange:
                     self.obj.trail_radius = trail_radius
                 self.obj.make_trail = True
         except AttributeError:
-            print("ERROR: wrong arguments type while initializing!!")"""
+            print("ERROR: wrong arguments type while initializing!!")
 
     def clear_trail(self):
         """This method should be used when you want to no longer draw a trail and delete it"""
