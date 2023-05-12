@@ -280,11 +280,6 @@ if __name__ == '__main__':
                     'neptune': neptune,
                     'asteroid': asteroid
                     }
-    
-    # Laser Code
-    v1 = (-151500000 * DISTANCE_SCALE, 0, 0)
-    v2 = (-179600000 * DISTANCE_SCALE, 0, 0)
-    c = curve(pos=[v1,v2], color=color.green, radius=0.0003)
 
     button(text='<b>START</b>', pos=scene.title_anchor, bind=start_flag_button)
     scene.caption = ''
@@ -316,3 +311,14 @@ if __name__ == '__main__':
                         obj.sum_ang = 0
                 if type(obj) != Star: #if type(obj) != Star and type(obj) != Lagrange:"
                     obj.rotate_orbit()
+
+        # Hide and remove previous laser
+        if 'c' in locals():
+            c.visible = False
+            del c
+
+        # Laser Code
+        c = curve(pos=[satellite.obj.pos,
+                       asteroid.obj.pos], 
+                        color=color.green, 
+                        radius=0.0003)
