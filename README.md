@@ -1,6 +1,6 @@
 # AsteroidMitigation
  
-AsteroidMitigation is a solary system simulation that demonstrates the use case and effectivness of laser-based Asteroid Mitigation Systems (AMS). 
+AsteroidMitigation is a solar system simulation that demonstrates the use case and effectivness of laser-based Asteroid Mitigation Systems (AMS). 
 
 AsteroidMitigation does the following  
 - Models the solar system and the tileted, uneven, inconsistent orbits of the planets
