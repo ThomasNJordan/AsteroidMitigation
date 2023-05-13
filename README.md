@@ -1,5 +1,5 @@
-# AsteroidMitigation
- 
+# AsteroidMitigation - Winner of the GCI Showcase Award
+
 AsteroidMitigation is a solar system simulation that demonstrates the use case and effectivness of laser-based Asteroid Mitigation Systems (AMS). 
 
 AsteroidMitigation does the following  
